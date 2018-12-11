@@ -31,27 +31,18 @@ def print_values(label, values):
 nyq_rate = sample_rate / 2.
 
 # The cutoff frequency of the filter: 6KHz
-cutoff_hz = 1000.0
-
-# The cutoff frequency of the filter: 6KHz
-cutoff_hhz = 6000.0
+cutoff_hz = 6000.0
 
 # Length of the filter (number of coefficients, i.e. the filter order + 1)
-numtaps = 63
+numtaps = 29
 
 # Use firwin to create a lowpass FIR filter
-#fir_coeff = firwin(numtaps, cutoff_hz/nyq_rate)
+fir_coeff = firwin(numtaps, cutoff_hz/nyq_rate)
 
-## high pass filter
-fir_coeff = firwin(numtaps, cutoff_hz/nyq_rate, pass_zero=False)
-
-## high pass filter
-#fir_coeff = firwin(numtaps, cutoff = [cutoff_hz/nyq_rate,cutoff_hhz/nyq_rate], window = "hanning", pass_zero=False)
-
-#print_values('init test_lowpass', fir_coeff)
+print_values('init test_lowpass', fir_coeff)
 # Use lfilter to filter the signal with the FIR filter
-filtered_signal = lfilter(fir_coeff, 1.0, signal)
-
+#filtered_signal = lfilter(fir_coeff, 1.0, signal)
+"""
 #------------------------------------------------
 # Plot the original and filtered signals.
 #------------------------------------------------
@@ -79,5 +70,6 @@ plot(t[warmup:]-delay, filtered_signal[warmup:], 'g', linewidth=4)
 
 
 #print_values('signal', signal)
-print_values('test_lowpass', 10000*fir_coeff)
+print_values('test_lowpass', fir_coeff)
 #print_values('filtered_signal', filtered_signal)
+"""

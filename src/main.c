@@ -5,8 +5,9 @@
 //#include "portaudio.h"
 #include "fir.h"
 
-#define SAMPLE_RATE 48000
+#define SAMPLE_RATE 96000
 
+extern const float test_lowpass[29];
 
 int main(int argc, char *argv[])
 {   
@@ -33,7 +34,7 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	int tempSize = 160;
+	int tempSize = 1;
 	short *in  = (short*)calloc(tempSize, sizeof(short));
 	short *out = (short*)calloc(tempSize, sizeof(short));
 	int pcmLen = tempSize;
@@ -45,7 +46,10 @@ int main(int argc, char *argv[])
 	while(pcmLen > 0)
 	{
 		pcmLen = fread(in, sizeof(short), tempSize, inFp);
-		fir_process(in,out,pcmLen,0);
+		//fir_process(in,out,pcmLen,2);
+		fir_process_fixed(in,out,pcmLen,2);
+		//fir_convolve(test_lowpass, 29, in, out, pcmLen);
+		//fir_aconvolve(in,test_lowpass, 29, out, pcmLen);
 		pcmLen = fwrite(out, sizeof(short), pcmLen, outFp);
 	}
 
