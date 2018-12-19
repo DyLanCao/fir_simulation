@@ -5,6 +5,7 @@ INCDIR=./include
 CCFILES += \
 		$(SRCDIR)/fir.c \
 		$(SRCDIR)/taps.c \
+		$(SRCDIR)/resample_by_2.c \
 		$(SRCDIR)/main.c \
 
 HFILES += \

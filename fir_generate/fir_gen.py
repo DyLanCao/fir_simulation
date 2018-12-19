@@ -6,7 +6,7 @@ from pylab import figure, plot, grid, show
 # Create a signal for demonstration.
 #------------------------------------------------
 # 320 samples of (1000Hz + 15000 Hz) at 48 kHz
-sample_rate = 48000.
+sample_rate = 64000.
 nsamples = 320
 
 F_1KHz = 20000.
@@ -23,7 +23,8 @@ signal = A_1KHz * sin(2*pi*F_1KHz*t) + A_15KHz*sin(2*pi*F_15KHz*t)
 #------------------------------------------------
 def print_values(label, values):
     var = "float32_t %s[%d]" % (label, len(values))
-    print "%-30s = {%s}" % (var, ', '.join(["%+.10f" % x for x in values]))
+    print "%-30s = {%s}" % (var, ', '.join(["%+.0f" % x for x in values]))
+    #print "%-30s = {%s}" % (var, ', '.join(["%+.10f" % x for x in values]))
 #------------------------------------------------
 # Create a FIR filter and apply it to signal.
 #------------------------------------------------
@@ -31,7 +32,7 @@ def print_values(label, values):
 nyq_rate = sample_rate / 2.
 
 # The cutoff frequency of the filter: 6KHz
-cutoff_hz = 1000.0
+cutoff_hz =200.0
 
 # The cutoff frequency of the filter: 6KHz
 cutoff_hhz = 6000.0
@@ -40,7 +41,7 @@ cutoff_hhz = 6000.0
 numtaps = 63
 
 # Use firwin to create a lowpass FIR filter
-#fir_coeff = firwin(numtaps, cutoff_hz/nyq_rate)
+#fir_coeff = firwin(numtaps, cutoff_hhz/nyq_rate)
 
 ## high pass filter
 fir_coeff = firwin(numtaps, cutoff_hz/nyq_rate, pass_zero=False)
@@ -79,5 +80,5 @@ plot(t[warmup:]-delay, filtered_signal[warmup:], 'g', linewidth=4)
 
 
 #print_values('signal', signal)
-print_values('test_lowpass', 10000*fir_coeff)
+print_values('test_lowpass', fir_coeff*2**12)
 #print_values('filtered_signal', filtered_signal)

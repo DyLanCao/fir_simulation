@@ -5,7 +5,7 @@
 #include "fir.h"
 
 #define NUM_TAPS 63
-#define BUF_SIZE 2
+#define BUF_SIZE 320
 
 static short insamp[BUF_SIZE];
 /* coefficients stored in taps.c */
@@ -15,6 +15,7 @@ extern const float highpass[NUM_TAPS];
 extern const float test_lowpass[NUM_TAPS];
 extern const float test_highpass[NUM_TAPS];
 extern const int fixed_highpass[NUM_TAPS];
+extern const int fixed_lowpass[NUM_TAPS];
 
 void fir_init()
 {
@@ -38,13 +39,13 @@ int fir_process(const void* input, void *output, unsigned long numFrames, unsign
 		switch(filter)
 		{
 			case 0:
-				coeffp = &test_lowpass[0];
+				coeffp = &fixed_lowpass[0];
 				break;
 			case 1:
 				coeffp = &highpass[0];
 				break;
 			case 2:
-				coeffp = &test_highpass[0];
+				coeffp = &fixed_highpass[0];
 				break;
 			default:
 				break;
@@ -68,7 +69,7 @@ int fir_process(const void* input, void *output, unsigned long numFrames, unsign
 
 int fir_process_fixed(const void* input, void *output, unsigned long numFrames, unsigned int filter)
 {
-	float acc; // accumulator for MACs
+	int acc; // accumulator for MACs
 	const int *coeffp; // pointer to coefficients
 	const short *in = (short*)input;
 	short *out = (short *)output;
@@ -102,7 +103,7 @@ int fir_process_fixed(const void* input, void *output, unsigned long numFrames, 
 			acc += (*coeffp++) * (*in--);
 		}
 
-		acc = acc/10000;
+		acc = acc>>12;
 
 		*out++ = acc;
 	}
